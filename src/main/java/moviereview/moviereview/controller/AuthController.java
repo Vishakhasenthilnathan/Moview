@@ -34,14 +34,11 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthController() {
-    }
-
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(),loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed in successfully", HttpStatus.OK);
+        return new ResponseEntity<>("User logged in successfully", HttpStatus.OK);
     }
 
     @PostMapping("/signup")
@@ -58,7 +55,7 @@ public class AuthController {
         user.setUsername(signUpDTO.getUsername());
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
 
-        Role roles = roleRepository.findByRole(ERole.ROLE_Admin).get();
+        Role roles = roleRepository.findByRole("ROLE_Admin").get();
         user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
