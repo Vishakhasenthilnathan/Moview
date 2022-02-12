@@ -5,9 +5,11 @@ import moviereview.moviereview.payload.MovieDTO;
 import moviereview.moviereview.repository.MovieRepository;
 import moviereview.moviereview.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,40 @@ public class MovieServiceImplementation implements MovieService {
         return MapMovieToDTOResponse(movie.get());
         else
             throw new RuntimeException("Id does not exists");
+    }
+
+    @Override
+    public MovieDTO updateMovieById(Long id,MovieDTO movieDTO) {
+        Movie movieToBeUpdated = movieRepository.findById(id).orElseThrow(()->new RuntimeException("Movie with the given id does not exists.  Id: " + id));
+        //Refactor the below code
+        if(!Objects.isNull(movieDTO.getTitle()))
+            movieToBeUpdated.setTitle(movieDTO.getTitle());
+        if(!Objects.isNull(movieDTO.getGenre()))
+            movieToBeUpdated.setGenre(movieDTO.getGenre());
+        if(!Objects.isNull(movieDTO.getDirector()))
+            movieToBeUpdated.setDirector(movieDTO.getDirector());
+        if(!Objects.isNull(movieDTO.getLeadActor()))
+            movieToBeUpdated.setLeadActor(movieDTO.getLeadActor());
+        if(!Objects.isNull(movieDTO.getImdbRating()))
+            movieToBeUpdated.setImdbRating(movieDTO.getImdbRating());
+        if(!Objects.isNull(movieDTO.getDurationInMins()))
+            movieToBeUpdated.setDurationInMinutes(movieDTO.getDurationInMins());
+
+        Movie updatedMovie = movieRepository.save(movieToBeUpdated);
+
+        return MapMovieToDTOResponse(updatedMovie);
+    }
+
+    @Override
+    public void deleteMovieById(Long id) {
+        Movie movie = movieRepository.findById(id).orElseThrow(()->new RuntimeException("This Id does not exists"));
+        movieRepository.delete(movie);
+    }
+
+    @Override
+    public void deleteMovieByTitle(String title) {
+        Movie movie = movieRepository.findByTitle(title).orElseThrow(()->new RuntimeException("This title does not exists"));
+        movieRepository.delete(movie);
     }
 
     private MovieDTO MapMovieToDTOResponse(Movie movie) {

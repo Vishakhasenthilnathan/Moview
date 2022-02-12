@@ -10,6 +10,8 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.Year;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,5 +32,8 @@ public class Movie {
     @NonNull
     private String director;
     private String leadActor;
+
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
 }
