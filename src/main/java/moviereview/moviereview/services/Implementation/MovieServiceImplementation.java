@@ -5,7 +5,6 @@ import moviereview.moviereview.payload.MovieDTO;
 import moviereview.moviereview.repository.MovieRepository;
 import moviereview.moviereview.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +25,9 @@ public class MovieServiceImplementation implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> getMovieByTitle(String title) {
-       List<Movie> movieByTitle = movieRepository.findAllByTitle(title);
-        return movieByTitle.stream().map(movie -> MapMovieToDTOResponse(movie))
-                .collect(Collectors.toList());
+    public MovieDTO getMovieByTitle(String title) {
+       Movie movieByTitle = movieRepository.findByTitle(title).orElseThrow(()->new RuntimeException("Title does not exists"));
+        return MapMovieToDTOResponse(movieByTitle);
     }
 
     @Override

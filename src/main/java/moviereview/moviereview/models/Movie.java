@@ -1,12 +1,12 @@
 package moviereview.moviereview.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import javax.validation.constraints.NotBlank;
 import javax.persistence.*;
-import java.sql.Time;
-import java.time.Duration;
-import java.time.Year;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +22,8 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NonNull
+    @Column(nullable = false)
+    @NotBlank
     private String title;
     private int durationInMinutes;
     private String genre;
