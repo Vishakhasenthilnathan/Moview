@@ -20,6 +20,10 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    @GetMapping("/Hi")
+    public String Helloworld(){
+        return "Hello World";
+    }
     @GetMapping("/title={title}")
     public MovieDTO getAllMoviesByTitle(@PathVariable(name = "title") String title){
         return movieService.getMovieByTitle(title);
