@@ -41,9 +41,8 @@ public class MovieControllerTest {
         mockMvc.perform(get("/api/movies").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
-        verify(movieService,times(1)).getAllMovies();
+        verify(movieService, times(1)).getAllMovies();
     }
-
     @Test
     public void ShouldReturnOneMovieWhenOneMovieIsPresent() throws Exception {
         List<MovieDTO> movies = new ArrayList<MovieDTO>();
