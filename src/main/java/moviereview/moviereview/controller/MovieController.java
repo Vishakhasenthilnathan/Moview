@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -40,14 +41,20 @@ public class MovieController {
        return new ResponseEntity<MovieDTO>(movieDTO,HttpStatus.CREATED);
     }
 
-    @PutMapping("update/id={id}")
+    @PutMapping("/update/id={id}")
     public ResponseEntity<MovieDTO> updateMovieById(@RequestBody MovieDTO movieDTO, @PathVariable(name = "id") Long id){
+        if(Objects.isNull(movieService.getMovieById(id))){
+            return new ResponseEntity<MovieDTO>(movieDTO,HttpStatus.NOT_FOUND);
+        }
       MovieDTO updatedMovie =  movieService.updateMovieById(id,movieDTO);
       return new ResponseEntity<MovieDTO>(updatedMovie,HttpStatus.OK);
     }
 
     @DeleteMapping("delete/id={id}")
     public String deleteMovieById(@PathVariable(name = "id") Long id){
+        if(Objects.isNull(movieService.getMovieById(id))){
+            return "Id not found";
+        }
         movieService.deleteMovieById(id);
         return "Movie deleted successfully";
     }

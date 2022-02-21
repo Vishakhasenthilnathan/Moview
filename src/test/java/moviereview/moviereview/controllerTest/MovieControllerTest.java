@@ -1,11 +1,14 @@
 package moviereview.moviereview.controllerTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import moviereview.moviereview.controller.MovieController;
+import moviereview.moviereview.models.Movie;
 import moviereview.moviereview.payload.MovieDTO;
 import moviereview.moviereview.services.CustomUserDetailsService;
 import moviereview.moviereview.services.MovieService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,8 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MovieController.class)
@@ -104,9 +106,35 @@ public class MovieControllerTest {
         mockMvc.perform(post("/api/movies/create")
                         .content(objectMapper.writeValueAsString(movie))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                        .andExpect(status().isBadRequest());
 
         verify(movieService).createMovie(any());
+    }
+
+    @Test
+    public void ShouldMovieBeDeletedWhenMovieIdIsPresent() throws Exception {
+        when(movieService.getMovieById(1L)).thenReturn(MovieDTOBuild());
+       mockMvc.perform(delete("/api/movies/delete/id=1")
+               .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(content().string("Movie deleted successfully"));
+    }
+
+    @Test
+    public void ShouldMovieNotBeDeletedWhenIdIsInvalid() throws Exception {
+        mockMvc.perform(delete("/api/movies/delete/id=200")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Id not found"));
+    }
+    @Test
+    public void ShouldMovieBeUpdatedWhenIdIsPresent() throws Exception {
+        MovieDTO movieDTO = MovieDTOBuild();
+        when(movieService.updateMovieById(anyLong(),any())).thenReturn(movieDTO);
+        mockMvc.perform(put("/api/movies/update/id=1")
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(movieDTO)))
+//                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(movieDTO)));
     }
     public MovieDTO MovieDTOBuild(){
         MovieDTO movieDTO = new MovieDTO();

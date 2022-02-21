@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-//@ComponentScan({"main.controllers", "main.repositories"})
+@ComponentScan({"main.controllers", "main.repositories"})
 //@EnableJpaRepositories("main.repositories")
 public class MoviereviewApplication {
 
