@@ -1,14 +1,12 @@
 package moviereview.moviereview.controllerTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import moviereview.moviereview.controller.MovieController;
-import moviereview.moviereview.models.Movie;
 import moviereview.moviereview.payload.MovieDTO;
 import moviereview.moviereview.services.CustomUserDetailsService;
 import moviereview.moviereview.services.MovieService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

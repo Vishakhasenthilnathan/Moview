@@ -2,10 +2,8 @@ package moviereview.moviereview.controllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import moviereview.moviereview.controller.ReviewController;
-import moviereview.moviereview.payload.MovieDTO;
 import moviereview.moviereview.payload.ReviewDTO;
 import moviereview.moviereview.services.CustomUserDetailsService;
-import moviereview.moviereview.services.MovieService;
 import moviereview.moviereview.services.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,7 @@ public class ReviewControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+
     @Test
     public void ShouldReturnEmptyReviewsWhenNoReviewIsPresent() throws Exception {
         when(reviewService.getAllReviews(anyLong())).thenReturn(new ArrayList<ReviewDTO>());
