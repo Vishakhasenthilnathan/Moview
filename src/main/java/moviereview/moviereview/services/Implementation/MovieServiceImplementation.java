@@ -29,43 +29,28 @@ public class MovieServiceImplementation implements MovieService {
        Movie movieByTitle = movieRepository.findByTitle(title).orElseThrow(()->new RuntimeException("Title does not exists"));
         return MapMovieToDTOResponse(movieByTitle);
     }
-
-    @Override
-    public MovieDTO createMovie(MovieDTO movieDTO) {
-        Movie newMovie = MapDtoToMovie(movieDTO);
-        movieRepository.save(newMovie);
-        MovieDTO createdMovieDTO = MapMovieToDTOResponse(newMovie);
-        return createdMovieDTO;
-    }
-
     @Override
     public MovieDTO getMovieById(Long id) throws RuntimeException {
         Optional<Movie> movie = movieRepository.findById(id);
         if(movie.isPresent())
-        return MapMovieToDTOResponse(movie.get());
+            return MapMovieToDTOResponse(movie.get());
         else
             throw new RuntimeException("Id does not exists");
     }
 
     @Override
+    public MovieDTO createMovie(MovieDTO movieDTO) {
+        Movie newMovie = MapDtoToMovie(movieDTO);
+        movieRepository.save(newMovie);
+        //Not necessary
+        MovieDTO createdMovieDTO = MapMovieToDTOResponse(newMovie);
+        return createdMovieDTO;
+    }
+    @Override
     public MovieDTO updateMovieById(Long id,MovieDTO movieDTO) {
         Movie movieToBeUpdated = movieRepository.findById(id).orElseThrow(()->new RuntimeException("Movie with the given id does not exists.  Id: " + id));
-        //Refactor the below code
-        if(!Objects.isNull(movieDTO.getTitle()))
-            movieToBeUpdated.setTitle(movieDTO.getTitle());
-        if(!Objects.isNull(movieDTO.getGenre()))
-            movieToBeUpdated.setGenre(movieDTO.getGenre());
-        if(!Objects.isNull(movieDTO.getDirector()))
-            movieToBeUpdated.setDirector(movieDTO.getDirector());
-        if(!Objects.isNull(movieDTO.getLeadActor()))
-            movieToBeUpdated.setLeadActor(movieDTO.getLeadActor());
-        if(!Objects.isNull(movieDTO.getImdbRating()))
-            movieToBeUpdated.setImdbRating(movieDTO.getImdbRating());
-        if(!Objects.isNull(movieDTO.getDurationInMins()))
-            movieToBeUpdated.setDurationInMinutes(movieDTO.getDurationInMins());
-
+        movieToBeUpdated = UpdateMovieData(movieToBeUpdated,movieDTO);
         Movie updatedMovie = movieRepository.save(movieToBeUpdated);
-
         return MapMovieToDTOResponse(updatedMovie);
     }
 
@@ -101,6 +86,22 @@ public class MovieServiceImplementation implements MovieService {
         movie.setGenre(movieDTO.getGenre());
         movie.setDurationInMinutes(movieDTO.getDurationInMins());
         return movie;
+    }
+    private Movie UpdateMovieData(Movie movieToBeUpdated, MovieDTO movieDTO) {
+        if(!Objects.isNull(movieDTO.getTitle()))
+            movieToBeUpdated.setTitle(movieDTO.getTitle());
+        if(!Objects.isNull(movieDTO.getGenre()))
+            movieToBeUpdated.setGenre(movieDTO.getGenre());
+        if(!Objects.isNull(movieDTO.getDirector()))
+            movieToBeUpdated.setDirector(movieDTO.getDirector());
+        if(!Objects.isNull(movieDTO.getLeadActor()))
+            movieToBeUpdated.setLeadActor(movieDTO.getLeadActor());
+        if(!Objects.isNull(movieDTO.getImdbRating()))
+            movieToBeUpdated.setImdbRating(movieDTO.getImdbRating());
+        if(!Objects.isNull(movieDTO.getDurationInMins()))
+            movieToBeUpdated.setDurationInMinutes(movieDTO.getDurationInMins());
+
+        return movieToBeUpdated;
     }
 
 }

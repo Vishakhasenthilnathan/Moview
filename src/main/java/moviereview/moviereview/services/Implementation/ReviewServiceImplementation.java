@@ -1,6 +1,5 @@
 package moviereview.moviereview.services.Implementation;
 
-import moviereview.moviereview.exception.ReviewNotFoundException;
 import moviereview.moviereview.models.Movie;
 import moviereview.moviereview.models.Review;
 import moviereview.moviereview.payload.ReviewDTO;
@@ -8,12 +7,10 @@ import moviereview.moviereview.repository.MovieRepository;
 import moviereview.moviereview.repository.ReviewRepository;
 import moviereview.moviereview.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +29,7 @@ public class ReviewServiceImplementation implements ReviewService {
         Review createdReview = reviewRepository.save(review);
 
         ReviewDTO createdreviewDTO = MapReviewToDTO(review);
-//        createdreviewDTO.setMovieTitle(movie.getTitle());
+
         return createdreviewDTO;
     }
 
@@ -55,16 +52,12 @@ public class ReviewServiceImplementation implements ReviewService {
     public ReviewDTO updateReviewById(Long movieId, Long reviewId, ReviewDTO reviewDTO) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(()->new RuntimeException("Movie does not exists"));
         Review review = reviewRepository.findById(reviewId).orElseThrow(()->new RuntimeException("Review does not exists"));
-        //Refactor the below code
-        if(!Objects.isNull(reviewDTO.getUsername()))
-            review.setUsername(reviewDTO.getUsername());
-        if(!Objects.isNull(reviewDTO.getReviewComments()))
-            review.setReviewComments(reviewDTO.getReviewComments());
-        if(!Objects.isNull(reviewDTO.getStarRating()))
-            review.setStarRating(reviewDTO.getStarRating());
+
+        review = UpdateReview(review,reviewDTO);
 
         return MapReviewToDTO(review);
     }
+
 
     @Override
     public void deleteReviewById(Long reviewId) {
@@ -87,4 +80,15 @@ public class ReviewServiceImplementation implements ReviewService {
         review.setStarRating(reviewDTO.getStarRating());
         return review;
     }
+    private Review UpdateReview(Review review, ReviewDTO reviewDTO) {
+        if(!Objects.isNull(reviewDTO.getUsername()))
+            review.setUsername(reviewDTO.getUsername());
+        if(!Objects.isNull(reviewDTO.getReviewComments()))
+            review.setReviewComments(reviewDTO.getReviewComments());
+        if(!Objects.isNull(reviewDTO.getStarRating()))
+            review.setStarRating(reviewDTO.getStarRating());
+
+        return review;
+    }
+
 }
