@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan
+@ComponentScan("main.controllers, main.repositories")
 //@EnableJpaRepositories("main.repositories")
 public class MoviereviewApplication {
 
