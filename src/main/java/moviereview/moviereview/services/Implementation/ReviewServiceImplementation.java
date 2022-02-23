@@ -22,19 +22,16 @@ public class ReviewServiceImplementation implements ReviewService {
     @Override
     public ReviewDTO postReview(ReviewDTO reviewDTO, Long movieId) {
         Review review = MapReviewDtoToReviewEntity(reviewDTO);
-
         Movie movie = movieRepository.findById(movieId).orElseThrow(()->new RuntimeException("Movie does not exists"));
         review.setMovie(movie);
-
         Review createdReview = reviewRepository.save(review);
-
         ReviewDTO createdreviewDTO = MapReviewToDTO(review);
-
         return createdreviewDTO;
     }
 
     @Override
     public List<ReviewDTO> getAllReviews(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()->new RuntimeException("Movie does not exists"));
             List<Review> reviews = reviewRepository.findByMovieId(movieId);
             List<ReviewDTO> reviewsCreated = reviews.stream().map(review -> MapReviewToDTO(review)).collect(Collectors.toList());
             return reviewsCreated;
